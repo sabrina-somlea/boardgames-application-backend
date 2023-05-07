@@ -1,7 +1,9 @@
 package ro.ubb.boardgameapp.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.Date;
@@ -15,12 +17,14 @@ import java.util.UUID;
 @ToString
 @Builder
 public class User extends BaseEntity<UUID> {
+
     private String firstName;
     private String lastName;
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthday;
     private Gender gender;
     private String email;
+    @Column(unique = true)
     private String username;
     private String password;
 

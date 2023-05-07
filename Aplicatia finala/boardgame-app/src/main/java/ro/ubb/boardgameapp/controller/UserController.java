@@ -1,5 +1,6 @@
 package ro.ubb.boardgameapp.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class UserController {
    }
 
    @RequestMapping(value = "/users", method = RequestMethod.POST)
-   UserDto saveUser(@RequestBody UserDto userDto) {
+   UserDto saveUser(@Valid @RequestBody UserDto userDto) {
       User user = userConverter.convertDtoToEntity(userDto);
       User savedUser = userService.saveUser(user);
       return userConverter.convertEntityToDto(savedUser);
@@ -48,5 +49,9 @@ public class UserController {
       userService.deleteUser(id);
       return new ResponseEntity<>(HttpStatus.OK);
    }
-
+   @GetMapping("/check-username")
+   public ResponseEntity<Boolean> isUsernameUnique(@RequestParam String username) {
+      boolean isUnique = userService.findByUsername(username) == null;
+      return ResponseEntity.ok(isUnique);
+   }
 }
