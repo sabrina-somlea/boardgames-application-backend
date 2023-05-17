@@ -1,6 +1,7 @@
 package ro.ubb.boardgameapp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.ubb.boardgameapp.model.User;
@@ -19,6 +20,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
+        String plainPassword = user.getPassword();
+        String hashedPassword = BCrypt.hashpw(plainPassword, BCrypt.gensalt());
+        user.setPassword(hashedPassword);
         User saveUser = userRepository.save(user);
         return saveUser;
     }

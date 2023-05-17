@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
+//@CrossOrigin(origins = "http://localhost:4200")
 
 public class UserController {
    @Autowired
@@ -54,7 +55,8 @@ public class UserController {
 //      boolean isUnique = userService.findByUsername(username) == null;
 //      return ResponseEntity.ok(isUnique);
 //   }
-      @GetMapping("/check-username")
+//@CrossOrigin(origins = "*")
+@GetMapping("/check-username")
    public ResponseEntity<Boolean> usernameExists(@RequestParam String username) {
       boolean usernameExists = userService.findByUsername(username) !=null;
       return ResponseEntity.ok(usernameExists);

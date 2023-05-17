@@ -18,6 +18,7 @@ public class UserConverter extends BaseConverter<User, UserDto> {
                 .gender(dto.getGender())
                 .email(dto.getEmail())
                 .username(dto.getUsername())
+                .password(dto.getPassword())
                 .build();
         user.setId(dto.getId());
         return user;
