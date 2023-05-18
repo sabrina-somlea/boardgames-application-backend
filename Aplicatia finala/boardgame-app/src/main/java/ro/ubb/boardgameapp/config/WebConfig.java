@@ -57,7 +57,7 @@ public class WebConfig {
 ////            .httpBasic(Customizer.withDefaults())
 //                .csrf().disable()
 //                .build();
-
+//versiunea de mai jos merge
         return http
                 .cors().and()
                 .authorizeRequests()
