@@ -48,24 +48,7 @@ public class WebConfig {
 //
 //
 
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        return http
-////                .cors(Customizer.withDefaults()) // by default uses a Bean by the name of corsConfigurationSource
-//            .authorizeRequests(auth -> auth
-//                    .anyRequest().authenticated())
-////            .httpBasic(Customizer.withDefaults())
-//                .csrf().disable()
-//                .build();
-//versiunea de mai jos merge
-        return http
-                .cors().and()
-                .authorizeRequests()
-                .anyRequest().permitAll()
-                .and()
-                .csrf().disable()
-                .build();
-    }
+
 //
 
     @Bean

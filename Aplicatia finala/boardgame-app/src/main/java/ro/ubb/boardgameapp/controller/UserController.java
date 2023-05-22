@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/api/v1")
 //@CrossOrigin(origins = "http://localhost:4200")
 
 public class UserController {
@@ -23,6 +24,12 @@ public class UserController {
    @Autowired
    private UserConverter userConverter;
 
+   //demo
+   @GetMapping
+   public ResponseEntity<String> sayHello(){
+      return ResponseEntity.ok("Merge, amin");
+
+   }
    @GetMapping("/users")
    Set<UserDto> getAllUsers() {
       List<User> allUsers = userService.getAllUsers();
@@ -31,7 +38,8 @@ public class UserController {
 
    }
 
-   @RequestMapping(value = "/users", method = RequestMethod.POST)
+   @RequestMapping(value = "/auth/register", method = RequestMethod.POST)
+   @CrossOrigin(origins = { "*"})
    UserDto saveUser(@Valid @RequestBody UserDto userDto) {
       User user = userConverter.convertDtoToEntity(userDto);
       User savedUser = userService.saveUser(user);
@@ -57,6 +65,7 @@ public class UserController {
 //   }
 //@CrossOrigin(origins = "*")
 @GetMapping("/check-username")
+@CrossOrigin(origins = { "*"})
    public ResponseEntity<Boolean> usernameExists(@RequestParam String username) {
       boolean usernameExists = userService.findByUsername(username) !=null;
       return ResponseEntity.ok(usernameExists);
