@@ -16,6 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
+@CrossOrigin(origins ="*")
 //@CrossOrigin(origins = "http://localhost:4200")
 
 public class UserController {
@@ -25,7 +26,8 @@ public class UserController {
    private UserConverter userConverter;
 
    //demo
-   @GetMapping
+   @GetMapping("/welcome")
+   @CrossOrigin(origins = { "*"})
    public ResponseEntity<String> sayHello(){
       return ResponseEntity.ok("Merge, amin");
 
