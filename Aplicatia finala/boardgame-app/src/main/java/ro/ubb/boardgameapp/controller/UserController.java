@@ -29,7 +29,7 @@ public class UserController {
    @GetMapping("/welcome")
    @CrossOrigin(origins = { "*"})
    public ResponseEntity<String> sayHello(){
-      return ResponseEntity.ok("Merge, amin");
+      return ResponseEntity.ok("Merge!");
 
    }
    @GetMapping("/users")
