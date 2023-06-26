@@ -6,13 +6,18 @@ import org.springframework.transaction.annotation.Transactional;
 import ro.ubb.boardgameapp.model.BoardGame;
 import ro.ubb.boardgameapp.repository.BoardGameRepository;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 public class BoardGameServiceImpl implements BoardGameService{
     @Autowired
     private BoardGameRepository boardGameRepository;
+
+    @Autowired
+    private BoardGameApiService boardGameApiService;
     @Override
     public List<BoardGame> getAllBoardGames() {
         return boardGameRepository.findAll();
@@ -42,5 +47,16 @@ public class BoardGameServiceImpl implements BoardGameService{
     public void deleteBoardGame(UUID id) {
         boardGameRepository.deleteById(id);
 
+    }
+
+    @Override
+    public Set<BoardGame> searchBoardGames(String searchBoardGame) {
+
+        List<BoardGame> databaseBoardGames = boardGameRepository.findByNameContainingIgnoreCase(searchBoardGame);
+        List<BoardGame> apiBoardGames = boardGameApiService.searchBoardGames(searchBoardGame);
+        Set<BoardGame> result = new HashSet<>(databaseBoardGames);
+        result.addAll(apiBoardGames);
+
+        return result;
     }
 }

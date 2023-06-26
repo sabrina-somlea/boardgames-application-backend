@@ -3,6 +3,7 @@ package ro.ubb.boardgameapp.service;
 import ro.ubb.boardgameapp.model.BoardGame;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public interface BoardGameService {
@@ -13,4 +14,6 @@ public interface BoardGameService {
     BoardGame updateBoardGame(UUID id, BoardGame boardGame);
 
     void deleteBoardGame(UUID id);
+
+    Set<BoardGame> searchBoardGames (String searchBoardGame);
 }

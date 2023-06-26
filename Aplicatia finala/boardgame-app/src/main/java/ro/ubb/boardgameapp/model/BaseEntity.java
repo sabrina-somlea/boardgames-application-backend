@@ -1,5 +1,6 @@
 package ro.ubb.boardgameapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public abstract class BaseEntity<ID extends Serializable> implements Serializabl
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid", updatable = false)
+    @JsonIgnore
     private ID id;
 }
 
