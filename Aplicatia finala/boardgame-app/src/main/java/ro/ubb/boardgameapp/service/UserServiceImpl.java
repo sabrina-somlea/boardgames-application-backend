@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ro.ubb.boardgameapp.config.JwtAuthenticationFilter;
 import ro.ubb.boardgameapp.model.User;
 import ro.ubb.boardgameapp.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
@@ -48,5 +50,11 @@ public class UserServiceImpl implements UserService {
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
 
+    }
+
+    @Override
+    public Optional<User> getUserLoggedInInfo() {
+        String currentUserLoggedInInfo = JwtAuthenticationFilter.CURRENT_USER_LOGGED_IN;
+        return userRepository.findIdByUsername(currentUserLoggedInInfo);
     }
 }

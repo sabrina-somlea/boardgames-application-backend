@@ -9,6 +9,7 @@ import java.util.UUID;
 public interface BoardGameService {
     List<BoardGame> getAllBoardGames();
 
+
     BoardGame saveBoardGame( BoardGame boardGame);
 
     BoardGame updateBoardGame(UUID id, BoardGame boardGame);
@@ -16,4 +17,8 @@ public interface BoardGameService {
     void deleteBoardGame(UUID id);
 
     Set<BoardGame> searchBoardGames (String searchBoardGame);
+
+    Set<BoardGame> getAllBoardGamesByUsername(String username);
+
+    void deleteBoardGameFromUserCollection (String username, UUID boardgame_id);
 }

@@ -3,9 +3,7 @@ package ro.ubb.boardgameapp.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
@@ -38,6 +36,10 @@ public class BoardGame extends BaseEntity<UUID> {
     private int minPlayTime;
     @JsonProperty("max_playtime")
     private int maxPlayTime;
+
+
+
+
     @Override
     public boolean equals(Object o){
         if (o == this)
@@ -57,7 +59,11 @@ public class BoardGame extends BaseEntity<UUID> {
     }
 //categories
 
-    @ManyToMany(mappedBy = "boardGames")
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },mappedBy = "boardGames")
     private Set<User> users = new HashSet<>();
 
 }

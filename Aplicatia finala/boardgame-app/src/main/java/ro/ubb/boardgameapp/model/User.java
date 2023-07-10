@@ -2,11 +2,9 @@ package ro.ubb.boardgameapp.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.*;
 
@@ -15,9 +13,9 @@ import java.util.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(exclude="boardGames")
 @Builder
-public class User extends BaseEntity<UUID>  implements UserDetails {
+public class User extends BaseEntity<UUID> implements UserDetails {
 
     private String firstName;
     private String lastName;
@@ -29,14 +27,19 @@ public class User extends BaseEntity<UUID>  implements UserDetails {
     private String username;
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "user_boardgames",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "boardgame_id")
     )
     private Set<BoardGame> boardGames = new HashSet<>();
-   //for roles
+
+    //for roles
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

@@ -3,6 +3,7 @@ package ro.ubb.boardgameapp.service;
 import ro.ubb.boardgameapp.model.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
@@ -15,4 +16,5 @@ public interface UserService {
     void deleteUser(UUID id);
 User findByUsername(String username);
 
+Optional<User> getUserLoggedInInfo();
 }

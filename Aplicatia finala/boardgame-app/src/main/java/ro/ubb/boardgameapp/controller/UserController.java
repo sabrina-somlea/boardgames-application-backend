@@ -11,6 +11,7 @@ import ro.ubb.boardgameapp.model.User;
 import ro.ubb.boardgameapp.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -71,5 +72,11 @@ public class UserController {
    public ResponseEntity<Boolean> usernameExists(@RequestParam String username) {
       boolean usernameExists = userService.findByUsername(username) !=null;
       return ResponseEntity.ok(usernameExists);
+   }
+
+   @GetMapping("/userLoggedIn")
+   @CrossOrigin(origins = { "*"})
+   public Optional<User> getUserLoggedIn(){
+      return this.userService.getUserLoggedInInfo();
    }
 }

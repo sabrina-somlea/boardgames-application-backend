@@ -4,30 +4,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.ubb.boardgameapp.model.BoardGame;
+import ro.ubb.boardgameapp.model.User;
 import ro.ubb.boardgameapp.repository.BoardGameRepository;
+import ro.ubb.boardgameapp.repository.UserRepository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
-public class BoardGameServiceImpl implements BoardGameService{
+public class BoardGameServiceImpl implements BoardGameService {
     @Autowired
     private BoardGameRepository boardGameRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private BoardGameApiService boardGameApiService;
+
     @Override
     public List<BoardGame> getAllBoardGames() {
         return boardGameRepository.findAll();
     }
+
+
 
     @Override
     public BoardGame saveBoardGame(BoardGame boardGame) {
         BoardGame saveBoardGame = boardGameRepository.save(boardGame);
         return saveBoardGame;
     }
+
+
     @Transactional
     @Override
     public BoardGame updateBoardGame(UUID id, BoardGame boardGame) {
@@ -56,7 +63,39 @@ public class BoardGameServiceImpl implements BoardGameService{
         List<BoardGame> apiBoardGames = boardGameApiService.searchBoardGames(searchBoardGame);
         Set<BoardGame> result = new HashSet<>(databaseBoardGames);
         result.addAll(apiBoardGames);
+        Set<BoardGame> filteredApiBoardGames = result.stream().filter(
+                        res -> res.getName() != null && !res.getName().isEmpty()
+                                && res.getDescription() != null && !res.getDescription().isEmpty()
+                                && res.getYearPublished() != 0
+                                && res.getMinPlayers() != 0
+                                && res.getMaxPlayers() != 0
+                                && res.getMinPlayTime() != 0
+                                && res.getMaxPlayTime() != 0)
+                .collect(Collectors.toSet());
+//        filteredApiBoardGames.forEach(res -> {
+//            String correctDescription = res.getDescription().replaceAll("<[^>]+>", "");
+//            res.setDescription(correctDescription);
+//        });
 
-        return result;
+        return filteredApiBoardGames;
+    }
+    @Override
+    public Set<BoardGame> getAllBoardGamesByUsername(String username) {
+        Optional<User> userOptional = userRepository.findOptionalByUsername(username);
+        User user = userOptional.get();
+        return user.getBoardGames();
+    }
+
+    @Override
+    @Transactional
+    public void deleteBoardGameFromUserCollection(String username, UUID boardgame_id) {
+        Optional<User> userOptional = userRepository.findOptionalByUsername(username);
+        User user = userOptional.get();
+        BoardGame boardGame = boardGameRepository.findById(boardgame_id).get();
+        user.getBoardGames().remove(boardGame);
+        userRepository.save(user);
+//        UUID userId = user.getId();
+//        boardGameRepository.removeBoardGameFromUserCollection(userId, boardgame_id);
+
     }
 }

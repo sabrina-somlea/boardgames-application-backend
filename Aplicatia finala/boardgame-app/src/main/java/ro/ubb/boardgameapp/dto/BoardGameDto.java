@@ -16,13 +16,13 @@ public class BoardGameDto extends BaseDto {
     @NotBlank(message = "Please enter a description")
     private String description;
     @NotNull(message = "Please enter a year")
-    private int yearPublished;
+    private int year_published;
     @NotNull(message = "Please enter a number of players")
-    private int minPlayers;
+    private int min_players;
     @NotNull(message = "Please enter a number of players")
-    private int maxPlayers;
+    private int max_players;
     @NotNull(message = "Please enter the minimum play time")
-    private int minPlayTime;
+    private int min_playtime;
     @NotNull(message = "Please enter the maximum play time")
-    private int maxPlayTime;
+    private int max_playtime;
 }
