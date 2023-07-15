@@ -4,6 +4,7 @@ import ro.ubb.boardgameapp.model.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public interface UserService {
@@ -14,7 +15,23 @@ public interface UserService {
     User updateUser(UUID id, User user);
 
     void deleteUser(UUID id);
-User findByUsername(String username);
 
-Optional<User> getUserLoggedInInfo();
+    User findByUsername(String username);
+
+
+    Optional<User> getUserLoggedInInfo();
+
+    List<User> searchUsers(String searchQuery);
+
+    void sendFriendRequest(User currentUser, User friendUser);
+
+    void acceptFriendRequest(User currentUser, User friendUser);
+
+    void declineFriendRequest(User currentUser, User friendUser);
+
+    void deleteFriend(User currentUser, User friendUser);
+
+    Set<User> getAllFriendRequestsByUsername(String username);
+
+    Set<User> getAllFriendsByUsername(String username);
 }

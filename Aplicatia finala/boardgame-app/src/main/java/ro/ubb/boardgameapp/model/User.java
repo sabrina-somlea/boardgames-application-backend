@@ -1,6 +1,8 @@
 package ro.ubb.boardgameapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -42,6 +44,47 @@ public class User extends BaseEntity<UUID> implements UserDetails {
 //    @JsonManagedReference
     private Set<BoardGame> boardGames = new HashSet<>();
 
+    @ManyToMany
+            (fetch = FetchType.LAZY,
+                    cascade = {
+                            CascadeType.PERSIST,
+                            CascadeType.MERGE
+                    })
+    @JoinTable(name="table_friends",
+            joinColumns=@JoinColumn(name="user_id"),
+            inverseJoinColumns=@JoinColumn(name="friend_id")
+    )
+
+    @JsonBackReference
+    private Set<User> friends;
+
+    @ManyToMany
+    @JoinTable(name="table_friends",
+            joinColumns=@JoinColumn(name="friend_id"),
+            inverseJoinColumns=@JoinColumn(name="user_id")
+    )
+
+    @JsonManagedReference
+    private Set<User> friendOf;
+
+    @ManyToMany (fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name="table_friends_requests",
+            joinColumns=@JoinColumn(name="user_id"),
+            inverseJoinColumns=@JoinColumn(name="friend_id")
+    )
+    private Set<User> friendsRequests;
+
+    @ManyToMany
+    @JoinTable(name="table_friends_requests",
+            joinColumns=@JoinColumn(name="friend_id"),
+            inverseJoinColumns=@JoinColumn(name="user_id")
+    )
+    private Set<User> friendRequestOf;
+
     //for roles
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -71,4 +114,5 @@ public class User extends BaseEntity<UUID> implements UserDetails {
         this.boardGames.remove(boardGame);
         boardGame.getUsers().remove(this);
     }
+
 }
