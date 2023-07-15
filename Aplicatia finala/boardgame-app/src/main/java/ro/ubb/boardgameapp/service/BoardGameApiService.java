@@ -21,17 +21,31 @@ public class BoardGameApiService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public List<BoardGame> searchBoardGames(String searchBoardGame) {
-        String apiUrl = String.format(API_URL, searchBoardGame, client_key);
-        System.out.println(apiUrl);
+        if (searchBoardGame.contains(" ")) {
+            String correctSearchBoard = searchBoardGame.replace(" ", "%20");
+            String apiUrl = String.format(API_URL, correctSearchBoard, client_key);
+            try {
+                URL url = new URL(apiUrl);
+                //ObjectReader objectReader = objectMapper.readerFor(new TypeReference<List<BoardGame>>() {}).withRootName("games");
+                BoardGameWrapper boardGameWrapper = objectMapper.readValue(url, BoardGameWrapper.class);
+                return boardGameWrapper.getGameList();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return new ArrayList<>();
+        } else {
+            String apiUrl = String.format(API_URL, searchBoardGame, client_key);
+            System.out.println(apiUrl);
 
-        try {
-            URL url = new URL(apiUrl);
-            //ObjectReader objectReader = objectMapper.readerFor(new TypeReference<List<BoardGame>>() {}).withRootName("games");
-            BoardGameWrapper boardGameWrapper = objectMapper.readValue(url, BoardGameWrapper.class);
-            return boardGameWrapper.getGameList();
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                URL url = new URL(apiUrl);
+                //ObjectReader objectReader = objectMapper.readerFor(new TypeReference<List<BoardGame>>() {}).withRootName("games");
+                BoardGameWrapper boardGameWrapper = objectMapper.readValue(url, BoardGameWrapper.class);
+                return boardGameWrapper.getGameList();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 }

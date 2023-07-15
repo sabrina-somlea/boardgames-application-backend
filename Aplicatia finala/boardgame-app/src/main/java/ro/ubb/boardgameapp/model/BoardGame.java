@@ -1,6 +1,5 @@
 package ro.ubb.boardgameapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -20,11 +19,12 @@ import java.util.UUID;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BoardGame extends BaseEntity<UUID> {
-//    @JsonIgnore
+    //    @JsonIgnore
 //    private UUID id;
     @JsonProperty("name")
     private String name;
     @JsonProperty("description")
+    @Column(columnDefinition="varchar(5000)")
     private String description;
     @JsonProperty("year_published")
     private int yearPublished;
@@ -38,10 +38,8 @@ public class BoardGame extends BaseEntity<UUID> {
     private int maxPlayTime;
 
 
-
-
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (o == this)
             return true;
         if (!(o instanceof BoardGame other))
@@ -57,13 +55,19 @@ public class BoardGame extends BaseEntity<UUID> {
         }
         return result;
     }
-//categories
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            },mappedBy = "boardGames")
+    //categories
+    @ManyToMany(fetch = FetchType.LAZY
+            , mappedBy = "boardGames")
+
     private Set<User> users = new HashSet<>();
+
+    @PreRemove
+    private void removeUserAssociations() {
+        for (User user: this.users) {
+            user.getBoardGames().remove(this);
+        }
+    }
+
 
 }

@@ -10,7 +10,7 @@ import ro.ubb.boardgameapp.model.BoardGame;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+@Transactional
 public interface BoardGameRepository extends GenericRepository <BoardGame, UUID> {
     List<BoardGame> findByNameContainingIgnoreCase(String name);
     Optional<BoardGame> findByName(String name);

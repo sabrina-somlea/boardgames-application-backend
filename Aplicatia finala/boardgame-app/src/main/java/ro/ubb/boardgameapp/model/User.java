@@ -3,6 +3,8 @@ package ro.ubb.boardgameapp.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,7 +15,7 @@ import java.util.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude="boardGames")
+@ToString(exclude = "boardGames")
 @Builder
 public class User extends BaseEntity<UUID> implements UserDetails {
 
@@ -37,6 +39,7 @@ public class User extends BaseEntity<UUID> implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "boardgame_id")
     )
+//    @JsonManagedReference
     private Set<BoardGame> boardGames = new HashSet<>();
 
     //for roles
@@ -63,5 +66,9 @@ public class User extends BaseEntity<UUID> implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    public void removeBoardGame(BoardGame boardGame){
+        this.boardGames.remove(boardGame);
+        boardGame.getUsers().remove(this);
     }
 }
