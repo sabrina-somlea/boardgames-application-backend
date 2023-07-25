@@ -2,6 +2,7 @@ package ro.ubb.boardgameapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,7 +42,7 @@ public class User extends BaseEntity<UUID> implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "boardgame_id")
     )
-//    @JsonManagedReference
+    @JsonIgnore
     private Set<BoardGame> boardGames = new HashSet<>();
 
     @ManyToMany
@@ -55,7 +56,7 @@ public class User extends BaseEntity<UUID> implements UserDetails {
             inverseJoinColumns=@JoinColumn(name="friend_id")
     )
 
-    @JsonBackReference
+    @JsonIgnore
     private Set<User> friends;
 
     @ManyToMany
@@ -64,7 +65,7 @@ public class User extends BaseEntity<UUID> implements UserDetails {
             inverseJoinColumns=@JoinColumn(name="user_id")
     )
 
-    @JsonManagedReference
+    @JsonIgnore
     private Set<User> friendOf;
 
     @ManyToMany (fetch = FetchType.LAZY,
@@ -76,6 +77,8 @@ public class User extends BaseEntity<UUID> implements UserDetails {
             joinColumns=@JoinColumn(name="user_id"),
             inverseJoinColumns=@JoinColumn(name="friend_id")
     )
+
+    @JsonIgnore
     private Set<User> friendsRequests;
 
     @ManyToMany
@@ -83,6 +86,8 @@ public class User extends BaseEntity<UUID> implements UserDetails {
             joinColumns=@JoinColumn(name="friend_id"),
             inverseJoinColumns=@JoinColumn(name="user_id")
     )
+
+    @JsonIgnore
     private Set<User> friendRequestOf;
 
     //for roles
