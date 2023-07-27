@@ -15,6 +15,8 @@ public interface BoardGameRepository extends GenericRepository <BoardGame, UUID>
     List<BoardGame> findByNameContainingIgnoreCase(String name);
     Optional<BoardGame> findByName(String name);
     Optional<BoardGame> findIdByName(String name);
+
+   BoardGame findBoardGameById (UUID id);
     @Modifying
     @Transactional
     @Query("DELETE FROM User u WHERE u.id = :userId AND :boardgame_Id MEMBER OF u.boardGames")

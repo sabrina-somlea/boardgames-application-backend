@@ -98,4 +98,9 @@ public class BoardGameServiceImpl implements BoardGameService {
 //        boardGameRepository.removeBoardGameFromUserCollection(userId, boardgame_id);
 
     }
+
+    @Override
+    public BoardGame findBoardGameById(UUID id) {
+        return boardGameRepository.findBoardGameById(id);
+    }
 }

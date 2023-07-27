@@ -16,6 +16,8 @@ public interface UserRepository extends GenericRepository <User, UUID>{
     Optional<User> findOptionalByUsername(String username);
     Optional<User> findIdByUsername(String username);
 
+    User findUserById (UUID id);
+
     @Query(value = "SELECT u FROM User u WHERE " +
             "(LOWER(u.username) LIKE LOWER(CONCAT('%', :searchQuery, '%'))) OR " +
             "(LOWER(u.firstName) LIKE LOWER(CONCAT('%', :searchQuery, '%'))) OR " +

@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 
 @Entity
+@Table(name="user")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -89,6 +90,16 @@ public class User extends BaseEntity<UUID> implements UserDetails {
 
     @JsonIgnore
     private Set<User> friendRequestOf;
+
+
+    @ManyToMany(fetch = FetchType.LAZY
+            , mappedBy = "players")
+    @JsonIgnore
+    private Set<BoardGameSession> usersSessions = new HashSet<>();
+
+    @OneToMany(mappedBy = "winner")
+    private Set<BoardGameSession> wonSessions;
+
 
     //for roles
     @Override

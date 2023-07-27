@@ -65,6 +65,9 @@ public class BoardGame extends BaseEntity<UUID> {
     @JsonIgnore
     private Set<User> users = new HashSet<>();
 
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy="boardGame")
+    private Set<BoardGameSession> boardGamesSession;
     @PreRemove
     private void removeUserAssociations() {
         for (User user: this.users) {

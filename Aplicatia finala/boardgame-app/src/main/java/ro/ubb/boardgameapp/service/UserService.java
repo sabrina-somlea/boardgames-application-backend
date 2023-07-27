@@ -18,7 +18,7 @@ public interface UserService {
 
     User findByUsername(String username);
 
-
+User findUserById(UUID id);
     Optional<User> getUserLoggedInInfo();
 
     List<User> searchUsers(String searchQuery);
