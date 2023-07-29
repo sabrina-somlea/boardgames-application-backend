@@ -60,14 +60,14 @@ public class User extends BaseEntity<UUID> implements UserDetails {
     @JsonIgnore
     private Set<User> friends;
 
-    @ManyToMany
-    @JoinTable(name="table_friends",
-            joinColumns=@JoinColumn(name="friend_id"),
-            inverseJoinColumns=@JoinColumn(name="user_id")
-    )
-
-    @JsonIgnore
-    private Set<User> friendOf;
+//    @ManyToMany
+//    @JoinTable(name="table_friends",
+//            joinColumns=@JoinColumn(name="friend_id"),
+//            inverseJoinColumns=@JoinColumn(name="user_id")
+//    )
+//
+//    @JsonIgnore
+//    private Set<User> friendOf;
 
     @ManyToMany (fetch = FetchType.LAZY,
             cascade = {
@@ -82,14 +82,14 @@ public class User extends BaseEntity<UUID> implements UserDetails {
     @JsonIgnore
     private Set<User> friendsRequests;
 
-    @ManyToMany
-    @JoinTable(name="table_friends_requests",
-            joinColumns=@JoinColumn(name="friend_id"),
-            inverseJoinColumns=@JoinColumn(name="user_id")
-    )
-
-    @JsonIgnore
-    private Set<User> friendRequestOf;
+//    @ManyToMany
+//    @JoinTable(name="table_friends_requests",
+//            joinColumns=@JoinColumn(name="friend_id"),
+//            inverseJoinColumns=@JoinColumn(name="user_id")
+//    )
+//
+//    @JsonIgnore
+//    private Set<User> friendRequestOf;
 
 
     @ManyToMany(fetch = FetchType.LAZY
@@ -98,6 +98,7 @@ public class User extends BaseEntity<UUID> implements UserDetails {
     private Set<BoardGameSession> usersSessions = new HashSet<>();
 
     @OneToMany(mappedBy = "winner")
+    @JsonIgnore
     private Set<BoardGameSession> wonSessions;
 
 

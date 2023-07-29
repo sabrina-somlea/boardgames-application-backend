@@ -27,9 +27,9 @@ User findUserById(UUID id);
 
     void acceptFriendRequest(User currentUser, User friendUser);
 
-    void declineFriendRequest(User currentUser, User friendUser);
+    void declineFriendRequest(String username, UUID declinedUserId);
 
-    void deleteFriend(User currentUser, User friendUser);
+    void deleteFriend(String username, UUID deletedFriendId);
 
     Set<User> getAllFriendRequestsByUsername(String username);
 
