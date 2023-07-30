@@ -1,5 +1,6 @@
 package ro.ubb.boardgameapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,6 +36,8 @@ public class BoardGameSession extends BaseEntity<UUID>{
             joinColumns = @JoinColumn(name = "session_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+
+    @JsonIgnore
     private Set<User> players;
 
     @PreRemove

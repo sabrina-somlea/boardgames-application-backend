@@ -85,19 +85,14 @@ public class UserController {
       return usersFoundDtos;
    }
 
-   @PostMapping("/{username}/friend-request")
-   public void sendFriendRequest(@PathVariable String username, @RequestBody UserDto userDto) {
-//      String currentUserLoggedInInfo = JwtAuthenticationFilter.CURRENT_USER_LOGGED_IN;
-      User currentUser = userService.findByUsername(username);
-      User friendUser = userService.findByUsername(userDto.getUsername());
-      userService.sendFriendRequest(currentUser, friendUser);
+   @PostMapping("/send-friend-request/{username}/{requestedUserId}")
+   public void sendFriendRequest(@PathVariable(value= "username") String username,@PathVariable(value= "requestedUserId") UUID requestedUserId) {
+      userService.sendFriendRequest(username, requestedUserId);
    }
 
-   @PostMapping("/{username}/accept-friend-request")
-   public void acceptFriendRequest(@PathVariable String username, @RequestBody UserDto userDto) {
-      User currentUser = userService.findByUsername(username);
-      User friendUser = userService.findByUsername(userDto.getUsername());
-      userService.acceptFriendRequest(currentUser, friendUser);
+   @PostMapping("/accept-friend-request/{username}/{acceptedUserId}")
+   public void acceptFriendRequest(@PathVariable(value= "username") String username,@PathVariable(value= "acceptedUserId") UUID acceptedUserId) {
+      userService.acceptFriendRequest(username ,acceptedUserId);
    }
 
 //   @DeleteMapping("/{username}/decline-friend-request")
@@ -110,6 +105,11 @@ public class UserController {
    @DeleteMapping("/decline-friend-request{username}/{declinedUserId}")
    public void declineFriendRequest(@PathVariable(value= "username") String username,@PathVariable(value= "declinedUserId") UUID declinedUserId) {
       userService.declineFriendRequest(username, declinedUserId);
+   }
+
+   @DeleteMapping("/remove-friend-request/{declinedUserId}/{username}")
+   public void removeFriendRequest(@PathVariable(value= "declinedUserId") UUID declinedUserId, @PathVariable(value= "username") String username) {
+      userService.removeFriendRequest(declinedUserId, username);
    }
 
 //   @DeleteMapping("/{username}/delete-friend")
@@ -131,6 +131,12 @@ public class UserController {
       return userDtos;
    }
 
+   @GetMapping("/{username}/user-friend-requests-sent")
+   public Set<UserDto> getUserFriendRequestsSent(@PathVariable String username) {
+      Set<User> allFriendsRequests = userService.getAllFriendRequestsSentByUsername(username);
+      Set<UserDto> userDtos = userConverter.convertEntitiesToDtos(allFriendsRequests);
+      return userDtos;
+   }
    @GetMapping("/{username}/user-friends-list")
    public Set<UserDto> getUserFriendList(@PathVariable String username) {
       Set<User> allFriendsList = userService.getAllFriendsByUsername(username);

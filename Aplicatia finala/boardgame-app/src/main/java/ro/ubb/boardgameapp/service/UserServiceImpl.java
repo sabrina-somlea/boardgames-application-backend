@@ -71,27 +71,51 @@ public class UserServiceImpl implements UserService {
         return userRepository.searchUsers(searchQuery);
     }
 
+//    @Override
+//    public void sendFriendRequest(User currentUser, User friendUser) {
+//         {
+////            currentUser.getFriendsRequests().add(friendUser);
+//            friendUser.getFriendsRequests().add(currentUser);
+//            userRepository.save(currentUser);
+//            userRepository.save(friendUser);
+//        }
+//    }
     @Override
-    public void sendFriendRequest(User currentUser, User friendUser) {
-         {
-//            currentUser.getFriendsRequests().add(friendUser);
-            friendUser.getFriendsRequests().add(currentUser);
-            userRepository.save(currentUser);
-            userRepository.save(friendUser);
-        }
-    }
-
-    @Override
-    public void acceptFriendRequest(User currentUser, User friendUser) {
-        currentUser.getFriendsRequests().remove(friendUser);
-        friendUser.getFriendsRequests().remove(currentUser);
-        currentUser.getFriends().add(friendUser);
-        friendUser.getFriends().add(currentUser);
-        userRepository.save(currentUser);
-        userRepository.save(friendUser);
+    public void sendFriendRequest(String username, UUID userRequestedId) {
+        Optional<User> currentUser = userRepository.findOptionalByUsername(username);
+        User user = currentUser.get();
+        Optional<User> requestedUser = userRepository.findById(userRequestedId);
+        User requestedFriend = requestedUser.get();
+            requestedFriend.getFriendsRequests().add(user);
+//            user.getFriendRequestOf().add(requestedFriend);
+            userRepository.save(user);
+            userRepository.save(requestedFriend);
 
     }
+//    @Override
+//    public void acceptFriendRequest(User currentUser, User friendUser) {
+//        currentUser.getFriendsRequests().remove(friendUser);
+//        friendUser.getFriendsRequests().remove(currentUser);
+//        currentUser.getFriends().add(friendUser);
+//        friendUser.getFriends().add(currentUser);
+//        userRepository.save(currentUser);
+//        userRepository.save(friendUser);
+//
+//    }
+@Override
+public void acceptFriendRequest(String username, UUID userFriendId) {
+    Optional<User> currentUser = userRepository.findOptionalByUsername(username);
+    User user = currentUser.get();
+    Optional<User> acceptedUser = userRepository.findById(userFriendId);
+    User acceptedFriend = acceptedUser.get();
+    user.getFriendsRequests().remove(acceptedFriend);
+    acceptedFriend.getFriendsRequests().remove(user);
+    user.getFriends().add(acceptedFriend);
+    acceptedFriend.getFriends().add(user);
+    userRepository.save(user);
+    userRepository.save(acceptedFriend);
 
+}
 //    @Override
 //    public void declineFriendRequest(User currentUser, User friendUser) {
 //        currentUser.getFriendsRequests().remove(friendUser);
@@ -107,6 +131,18 @@ public class UserServiceImpl implements UserService {
         Optional<User> declinedUser = userRepository.findById(declinedUserId);
         User deniedUser = declinedUser.get();
         user.getFriendsRequests().remove(deniedUser);
+//        friendUser.getFriendRequestOf().remove(currentUser);
+        userRepository.save(user);
+        userRepository.save(deniedUser);
+    }
+
+    @Override
+    public void removeFriendRequest(UUID declinedUserId, String username) {
+        Optional<User> currentUser = userRepository.findOptionalByUsername(username);
+        User user = currentUser.get();
+        Optional<User> declinedUser = userRepository.findById(declinedUserId);
+        User deniedUser = declinedUser.get();
+        deniedUser.getFriendsRequests().remove(user);
 //        friendUser.getFriendRequestOf().remove(currentUser);
         userRepository.save(user);
         userRepository.save(deniedUser);
@@ -129,6 +165,13 @@ public class UserServiceImpl implements UserService {
             User user = userOptional.get();
             return user.getFriendsRequests();
         }
+
+    @Override
+    public Set<User> getAllFriendRequestsSentByUsername(String username) {
+        Optional<User> userOptional = userRepository.findOptionalByUsername(username);
+        User user = userOptional.get();
+        return user.getFriendRequestOf();
+    }
 
 
     @Override

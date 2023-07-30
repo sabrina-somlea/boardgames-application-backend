@@ -82,14 +82,13 @@ public class User extends BaseEntity<UUID> implements UserDetails {
     @JsonIgnore
     private Set<User> friendsRequests;
 
-//    @ManyToMany
-//    @JoinTable(name="table_friends_requests",
-//            joinColumns=@JoinColumn(name="friend_id"),
-//            inverseJoinColumns=@JoinColumn(name="user_id")
-//    )
-//
-//    @JsonIgnore
-//    private Set<User> friendRequestOf;
+    @ManyToMany
+    @JoinTable(name="table_friends_requests",
+            joinColumns=@JoinColumn(name="friend_id"),
+            inverseJoinColumns=@JoinColumn(name="user_id")
+    )
+    @JsonIgnore
+    private Set<User> friendRequestOf;
 
 
     @ManyToMany(fetch = FetchType.LAZY

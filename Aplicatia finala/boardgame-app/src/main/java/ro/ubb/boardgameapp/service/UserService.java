@@ -23,15 +23,18 @@ User findUserById(UUID id);
 
     List<User> searchUsers(String searchQuery);
 
-    void sendFriendRequest(User currentUser, User friendUser);
+    void sendFriendRequest(String username, UUID UserId);
 
-    void acceptFriendRequest(User currentUser, User friendUser);
+    void acceptFriendRequest(String username, UUID UserFriendId);
 
     void declineFriendRequest(String username, UUID declinedUserId);
+    void removeFriendRequest(UUID declinedUserId, String username);
 
     void deleteFriend(String username, UUID deletedFriendId);
 
     Set<User> getAllFriendRequestsByUsername(String username);
+
+    Set<User> getAllFriendRequestsSentByUsername(String username);
 
     Set<User> getAllFriendsByUsername(String username);
 }
