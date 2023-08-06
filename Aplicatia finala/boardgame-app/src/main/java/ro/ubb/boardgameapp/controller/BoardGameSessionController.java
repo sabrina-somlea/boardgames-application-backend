@@ -2,6 +2,8 @@ package ro.ubb.boardgameapp.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +12,12 @@ import ro.ubb.boardgameapp.dto.BoardGameDto;
 import ro.ubb.boardgameapp.dto.BoardGameSessionDto;
 import ro.ubb.boardgameapp.model.BoardGame;
 import ro.ubb.boardgameapp.model.BoardGameSession;
+import ro.ubb.boardgameapp.model.BoardGameSessionSpecifications;
 import ro.ubb.boardgameapp.repository.BoardGameSessionRepository;
 import ro.ubb.boardgameapp.service.BoardGameSessionService;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -58,5 +63,29 @@ public class BoardGameSessionController {
                         boardGameSessionConverter.convertDtoToEntity(boardGameSessionDto))
         );
     }
+//    @GetMapping("/sessions")
+//    public Set<BoardGameSessionDto> getFilteredSessions(
+//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date sessionDate,
+//            @RequestParam(required = false) String boardGameName,
+//            @RequestParam(required = false) String winnerName,
+//            @RequestParam(required = false) String playerName) {
+//
+////        Specification<BoardGameSession> spec = BoardGameSessionSpecifications.filterByCriteria(boardGameName,sessionDate, winnerName, playerName);
+////        List<BoardGameSession> sessions= boardGameSessionRepository.findAll(spec);
+//        Set<BoardGameSessionDto> boardGameSessionDtos = boardGameSessionConverter.convertEntitiesToDtos(sessions);
+//        return boardGameSessionDtos;
+//    }
 
+    @GetMapping("/{username}/sessions")
+    public Set<BoardGameSessionDto> getUserFilteredSessions(@PathVariable String username,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date sessionDate,
+            @RequestParam(required = false) String boardGameName,
+            @RequestParam(required = false) String winnerName,
+            @RequestParam(required = false) String playerName) {
+
+        Specification<BoardGameSession> spec = BoardGameSessionSpecifications.filterByCriteria( boardGameName,sessionDate, winnerName, playerName, username);
+        List<BoardGameSession> sessions= boardGameSessionRepository.findAll(spec);
+        Set<BoardGameSessionDto> boardGameSessionDtos = boardGameSessionConverter.convertEntitiesToDtos(sessions);
+        return boardGameSessionDtos;
+    }
 }
