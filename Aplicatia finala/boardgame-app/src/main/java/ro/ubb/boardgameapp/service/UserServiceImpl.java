@@ -32,14 +32,16 @@ public class UserServiceImpl implements UserService {
     }
 @Transactional
     @Override
-    public User updateUser(UUID id, User user) {
-        User updateUser = userRepository.findById(id).orElseThrow();
+    public User updateUser(String username, User user) {
+//        User updateUser = userRepository.findById(id).orElseThrow();
+    User updateUser = userRepository.findOptionalByUsername(username).orElseThrow();
         updateUser.setFirstName(user.getFirstName());
         updateUser.setLastName(user.getLastName());
         updateUser.setGender(user.getGender());
         updateUser.setBirthday(user.getBirthday());
         updateUser.setEmail(user.getEmail());
-        updateUser.setPassword(user.getPassword());
+//        updateUser.setPassword(user.getPassword());
+        userRepository.save(updateUser);
         return updateUser;
     }
 
@@ -61,9 +63,25 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Optional<User> getUserLoggedInInfo() {
+    public User getUserLoggedInInfo() {
         String currentUserLoggedInInfo = JwtAuthenticationFilter.CURRENT_USER_LOGGED_IN;
-        return userRepository.findIdByUsername(currentUserLoggedInInfo);
+        return userRepository.findByUsername(currentUserLoggedInInfo);
+//        return userRepository.findIdByUsername(currentUserLoggedInInfo);
+    }
+
+    @Override
+    public User updatePassword(UUID id, String initialPassword, String newPassword) {
+        User userUpdatePassword = userRepository.findById(id).orElseThrow();
+        String storedHashedPassword = userUpdatePassword.getPassword();
+        boolean isPasswordCorrect = BCrypt.checkpw(initialPassword, storedHashedPassword);
+        if (!isPasswordCorrect) {
+            throw new IllegalArgumentException("Current password is incorrect!");
+        }
+        // set passwprd
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        userUpdatePassword.setPassword(hashedPassword);
+        userRepository.save(userUpdatePassword);
+        return userUpdatePassword;
     }
 
     @Override

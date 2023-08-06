@@ -44,7 +44,7 @@ public class BoardGameSessionController {
         return boardGameSessionConverter.convertEntityToDto(savedBoardGameSession);
     }
 
-    @DeleteMapping("/session/{session_id}")
+    @DeleteMapping("/session/{session_id}")public
     ResponseEntity<?> deleteBoardGameById(@PathVariable UUID session_id) {
         boardGameSessionService.deleteBoardGameSession(session_id);
         return new ResponseEntity<>(HttpStatus.OK);

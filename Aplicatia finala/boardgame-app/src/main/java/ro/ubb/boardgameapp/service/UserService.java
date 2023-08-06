@@ -12,15 +12,16 @@ public interface UserService {
 
     User saveUser(User user);
 
-    User updateUser(UUID id, User user);
+    User updateUser(String username, User user);
 
     void deleteUser(UUID id);
 
     User findByUsername(String username);
 
 User findUserById(UUID id);
-    Optional<User> getUserLoggedInInfo();
+   User getUserLoggedInInfo();
 
+    User updatePassword(UUID id, String initialPassword, String newPassword);
     List<User> searchUsers(String searchQuery);
 
     void sendFriendRequest(String username, UUID UserId);

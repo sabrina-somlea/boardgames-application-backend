@@ -32,6 +32,9 @@ public class User extends BaseEntity<UUID> implements UserDetails {
     @Column(unique = true)
     private String username;
     private String password;
+    @Lob
+    @Column(name = "profile_image", columnDefinition = "bytea")
+    private byte[] profileImage;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -130,5 +133,4 @@ public class User extends BaseEntity<UUID> implements UserDetails {
         this.boardGames.remove(boardGame);
         boardGame.getUsers().remove(this);
     }
-
 }

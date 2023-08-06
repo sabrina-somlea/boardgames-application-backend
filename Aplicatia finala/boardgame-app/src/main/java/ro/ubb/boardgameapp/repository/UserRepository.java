@@ -26,6 +26,4 @@ public interface UserRepository extends GenericRepository <User, UUID>{
             "(LOWER(CONCAT(u.lastName, ' ', u.firstName)) LIKE LOWER(CONCAT('%', :searchQuery, '%')))"
            )
     List<User> searchUsers(String searchQuery);
-
-
 }

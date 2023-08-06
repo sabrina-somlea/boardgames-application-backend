@@ -19,6 +19,7 @@ public class UserConverter extends BaseConverter<User, UserDto> {
                 .email(dto.getEmail())
                 .username(dto.getUsername())
                 .password(dto.getPassword())
+//                .profileImage(dto.getProfileImage())
                 .build();
         user.setId(dto.getId());
         return user;
@@ -33,6 +34,7 @@ public class UserConverter extends BaseConverter<User, UserDto> {
                 .gender(user.getGender())
                 .email(user.getEmail())
                 .username(user.getUsername())
+//                .profileImage(user.getProfileImage())
                 .build();
         userDto.setId(user.getId());
         return userDto;

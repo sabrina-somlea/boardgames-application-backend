@@ -29,4 +29,10 @@ public abstract class BaseConverter<Entity extends BaseEntity<UUID>, Dto extends
                 .map(this::convertEntityToDto)
                 .collect(Collectors.toSet());
     }
+
+//    public Set<Dto> convertEntityToDtos(Entity entity) {
+//        return entities.stream()
+//                .map(this::convertEntityToDto)
+//                .collect(Collectors.toSet());
+//    }
 }

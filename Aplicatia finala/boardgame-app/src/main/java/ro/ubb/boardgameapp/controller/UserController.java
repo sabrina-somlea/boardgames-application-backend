@@ -3,13 +3,17 @@ package ro.ubb.boardgameapp.controller;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ro.ubb.boardgameapp.converter.UserConverter;
+import ro.ubb.boardgameapp.dto.UpdatePasswordDto;
 import ro.ubb.boardgameapp.dto.UserDto;
 import ro.ubb.boardgameapp.model.User;
 import ro.ubb.boardgameapp.service.UserService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -42,20 +46,28 @@ public class UserController {
 
    }
 
-   @RequestMapping(value = "/auth/register", method = RequestMethod.POST)
+   @RequestMapping(value = "/auth/register", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
    @CrossOrigin(origins = {"*"})
-   UserDto saveUser(@Valid @RequestBody UserDto userDto) {
+   UserDto saveUser(@Valid @RequestBody UserDto userDto,  @RequestParam("profileImage") MultipartFile profileImage) throws IOException {
       User user = userConverter.convertDtoToEntity(userDto);
+      user.setProfileImage(profileImage.getBytes());
       User savedUser = userService.saveUser(user);
       return userConverter.convertEntityToDto(savedUser);
    }
 
-   @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
-   UserDto updateUser(@PathVariable UUID id, @RequestBody UserDto userDto) {
+   @RequestMapping(value = "/users/{username}", method = RequestMethod.PUT)
+   UserDto updateUser(@PathVariable String username, @RequestBody UserDto userDto) {
       return userConverter.convertEntityToDto(
-              userService.updateUser(id,
+              userService.updateUser(username,
                       userConverter.convertDtoToEntity(userDto))
       );
+   }
+
+   @PutMapping("/users/id={id}")
+   public User updatePassword(@PathVariable(value = "id") UUID userId,
+                             @RequestBody UpdatePasswordDto updatePasswordDto) {
+      User updateUser = userService.updatePassword(userId, updatePasswordDto.getInitialPassword(), updatePasswordDto.getNewPassword());
+      return updateUser;
    }
 
    @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
@@ -73,9 +85,12 @@ public class UserController {
 
    @GetMapping("/userLoggedIn")
    @CrossOrigin(origins = {"*"})
-   public Optional<User> getUserLoggedIn() {
-      return this.userService.getUserLoggedInInfo();
+   public UserDto getUserLoggedIn() {
+     User user =  userService.getUserLoggedInInfo();
+     UserDto userDto = userConverter.convertEntityToDto(user);
+     return userDto;
    }
+
 
    @GetMapping("/searchUser")
    public Set<UserDto> searchUsers(@RequestParam String searchQuery) {
