@@ -38,7 +38,8 @@ public class BoardGame extends BaseEntity<UUID> {
     private int minPlayTime;
     @JsonProperty("max_playtime")
     private int maxPlayTime;
-
+    @JsonProperty("image_url")
+    private String imageUrl;
 
     @Override
     public boolean equals(Object o) {

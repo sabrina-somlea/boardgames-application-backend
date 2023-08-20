@@ -7,17 +7,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ro.ubb.boardgameapp.converter.BoardGameConverter;
 import ro.ubb.boardgameapp.converter.UserConverter;
+import ro.ubb.boardgameapp.dto.BoardGameDto;
 import ro.ubb.boardgameapp.dto.UpdatePasswordDto;
 import ro.ubb.boardgameapp.dto.UserDto;
+import ro.ubb.boardgameapp.model.BoardGame;
 import ro.ubb.boardgameapp.model.User;
+import ro.ubb.boardgameapp.service.BoardGameSessionService;
 import ro.ubb.boardgameapp.service.UserService;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -29,7 +34,10 @@ public class UserController {
    private UserService userService;
    @Autowired
    private UserConverter userConverter;
-
+   @Autowired
+   private BoardGameConverter boardGameConverter;
+   @Autowired
+   private BoardGameSessionService boardGameSessionService;
    //demo
    @GetMapping("/welcome")
    @CrossOrigin(origins = {"*"})
@@ -46,11 +54,11 @@ public class UserController {
 
    }
 
-   @RequestMapping(value = "/auth/register", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+   @RequestMapping(value = "/auth/register", method = RequestMethod.POST)
    @CrossOrigin(origins = {"*"})
-   UserDto saveUser(@Valid @RequestBody UserDto userDto,  @RequestParam("profileImage") MultipartFile profileImage) throws IOException {
+   UserDto saveUser(@Valid @RequestBody UserDto userDto) throws IOException {
       User user = userConverter.convertDtoToEntity(userDto);
-      user.setProfileImage(profileImage.getBytes());
+//      user.setProfileImage(profileImage.getBytes());
       User savedUser = userService.saveUser(user);
       return userConverter.convertEntityToDto(savedUser);
    }
@@ -159,5 +167,47 @@ public class UserController {
       return allFriendsDtos;
 
 
+   }
+
+//   @GetMapping("/{userId}/top-games")
+//   public List<BoardGame> getTop3PlayedGamesByUser(@PathVariable UUID userId) {
+//      return userService.getTop3PlayedGamesByUser(userId);
+//   }
+   @GetMapping("/{username}/top-games")
+//   public List<BoardGameDto> getTop3PlayedGamesByUsername(@PathVariable String username) {
+//      List<BoardGame> top3BoardGames = boardGameSessionService.getTop3PlayedGamesByUsername(username);
+//      List<BoardGameDto> top3BoardGameDtos = top3BoardGames.stream()
+//              .map(boardGameConverter::convertEntityToDto)
+//              .collect(Collectors.toList());
+//      return top3BoardGameDtos;
+//   }
+   public Map<String, Long> getTop3PlayedGamesWithPlayCountByUsername(@PathVariable String username) {
+      Map<BoardGame, Long> topGamesWithPlayCount = boardGameSessionService.getTop3PlayedGamesByUsername(username);
+
+      return topGamesWithPlayCount.entrySet().stream()
+              .collect(Collectors.toMap(
+                      entry -> entry.getKey().getName(), // Numele jocului
+                      Map.Entry::getValue
+              ));
+   }
+
+   @GetMapping("/{userId}/won-sessions-count")
+   public Long getNumberOfWonSessionsForUser(@PathVariable UUID userId) {
+      return boardGameSessionService.countWonSessionsByUserId(userId);
+   }
+
+   @GetMapping("/{userId}/played-sessions-count")
+   public Long getNumberOfPlayedSessionsForUser(@PathVariable UUID userId) {
+      return boardGameSessionService.countPlayedSessionsByUserId(userId);
+   }
+
+   @GetMapping("/{userId}/friends-count")
+   public Long getNumberOfFriendsForUser(@PathVariable UUID userId) {
+      return userService.countFriendsForUser(userId);
+   }
+
+   @GetMapping("/{userId}/boardgames-count")
+   public Long getNumberOfBoardGamesForUser(@PathVariable UUID userId) {
+      return boardGameSessionService.countBoardGamesForUser(userId);
    }
 }

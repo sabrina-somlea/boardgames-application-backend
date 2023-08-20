@@ -1,9 +1,8 @@
 package ro.ubb.boardgameapp.repository;
 
-import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import ro.ubb.boardgameapp.model.BoardGame;
 import ro.ubb.boardgameapp.model.User;
 
 import java.util.List;
@@ -26,4 +25,20 @@ public interface UserRepository extends GenericRepository <User, UUID>{
             "(LOWER(CONCAT(u.lastName, ' ', u.firstName)) LIKE LOWER(CONCAT('%', :searchQuery, '%')))"
            )
     List<User> searchUsers(String searchQuery);
+
+    @Query("SELECT bg FROM BoardGame bg " +
+            "JOIN bg.boardGamesSession s " +
+            "JOIN s.players p " +
+            "WHERE p = :user " +
+            "GROUP BY bg " +
+            "ORDER BY COUNT(bg) DESC")
+    List<BoardGame> findTop3PlayedGamesByUser(@Param("user") Optional<User> user);
+
+    Long countByFriendsId(UUID friendId);
+
+
+    @Query("SELECT COUNT(bg) FROM User u JOIN u.boardGames bg WHERE u.id = :userId")
+    Long countByBoardGamesId(@Param("userId") UUID userId);
+
+
 }

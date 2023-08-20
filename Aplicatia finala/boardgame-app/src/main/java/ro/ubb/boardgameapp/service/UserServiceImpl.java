@@ -1,6 +1,7 @@
 package ro.ubb.boardgameapp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,10 +105,10 @@ public class UserServiceImpl implements UserService {
         User user = currentUser.get();
         Optional<User> requestedUser = userRepository.findById(userRequestedId);
         User requestedFriend = requestedUser.get();
-            requestedFriend.getFriendsRequests().add(user);
-//            user.getFriendRequestOf().add(requestedFriend);
-            userRepository.save(user);
-            userRepository.save(requestedFriend);
+        requestedFriend.getFriendsRequests().add(user);
+            user.getFriendRequestOf().add(requestedFriend);
+        userRepository.save(user);
+//        userRepository.save(requestedFriend);
 
     }
 //    @Override
@@ -126,10 +127,11 @@ public void acceptFriendRequest(String username, UUID userFriendId) {
     User user = currentUser.get();
     Optional<User> acceptedUser = userRepository.findById(userFriendId);
     User acceptedFriend = acceptedUser.get();
+    acceptedFriend.getFriendRequestOf().remove(user);
     user.getFriendsRequests().remove(acceptedFriend);
-    acceptedFriend.getFriendsRequests().remove(user);
-    user.getFriends().add(acceptedFriend);
-    acceptedFriend.getFriends().add(user);
+//    acceptedFriend.getFriendRequestOf().remove(user);
+   acceptedFriend.getFriends().add(user);
+   user.getFriends().add(acceptedFriend);
     userRepository.save(user);
     userRepository.save(acceptedFriend);
 
@@ -149,7 +151,7 @@ public void acceptFriendRequest(String username, UUID userFriendId) {
         Optional<User> declinedUser = userRepository.findById(declinedUserId);
         User deniedUser = declinedUser.get();
         user.getFriendsRequests().remove(deniedUser);
-//        friendUser.getFriendRequestOf().remove(currentUser);
+//        deniedUser.getFriendRequestOf().remove(user);
         userRepository.save(user);
         userRepository.save(deniedUser);
     }
@@ -161,7 +163,7 @@ public void acceptFriendRequest(String username, UUID userFriendId) {
         Optional<User> declinedUser = userRepository.findById(declinedUserId);
         User deniedUser = declinedUser.get();
         deniedUser.getFriendsRequests().remove(user);
-//        friendUser.getFriendRequestOf().remove(currentUser);
+//       user.getFriendRequestOf().remove(deniedUser);
         userRepository.save(user);
         userRepository.save(deniedUser);
     }
@@ -172,7 +174,7 @@ public void acceptFriendRequest(String username, UUID userFriendId) {
         Optional<User> deletedUser = userRepository.findById(deletedUserId);
         User deniedUser = deletedUser.get();
         user.getFriends().remove(deniedUser);
-//        friendUser.getFriendOf().remove(currentUser);
+        deniedUser.getFriends().remove(user);
         userRepository.save(user);
         userRepository.save(deniedUser);
     }
@@ -197,6 +199,18 @@ public void acceptFriendRequest(String username, UUID userFriendId) {
         Optional<User> userOptional = userRepository.findOptionalByUsername(username);
         User user = userOptional.get();
         return user.getFriends();
+    }
+
+    @Override
+    public List<BoardGame> getTop3PlayedGamesByUser(UUID userId) {
+        Optional<User> user = userRepository.findById(userId);
+
+        return userRepository.findTop3PlayedGamesByUser(user);
+    }
+
+    @Override
+    public Long countFriendsForUser(UUID userId) {
+        return userRepository.countByFriendsId(userId);
     }
 
 

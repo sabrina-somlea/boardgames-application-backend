@@ -40,6 +40,6 @@ public class UserDto extends BaseDto {
     private String username;
     @NotBlank(message = "Please enter a password")
     private String password;
-    private byte[] profileImage;
+//    private byte[] profileImage;
 
 }

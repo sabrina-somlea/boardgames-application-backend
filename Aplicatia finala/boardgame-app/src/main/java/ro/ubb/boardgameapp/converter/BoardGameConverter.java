@@ -16,6 +16,7 @@ public class BoardGameConverter extends BaseConverter<BoardGame, BoardGameDto> {
                 .maxPlayers(dto.getMax_players())
                 .minPlayTime(dto.getMin_playtime())
                 .maxPlayTime(dto.getMax_playtime())
+                .imageUrl(dto.getImage_url())
                 .build();
         boardgame.setId(dto.getId());
         return boardgame;
@@ -31,6 +32,7 @@ public class BoardGameConverter extends BaseConverter<BoardGame, BoardGameDto> {
                 .max_players(boardGame.getMaxPlayers())
                 .min_playtime(boardGame.getMinPlayTime())
                 .max_playtime(boardGame.getMaxPlayTime())
+                .image_url(boardGame.getImageUrl())
                 .build();
         boardGameDto.setId(boardGame.getId());
         return boardGameDto;

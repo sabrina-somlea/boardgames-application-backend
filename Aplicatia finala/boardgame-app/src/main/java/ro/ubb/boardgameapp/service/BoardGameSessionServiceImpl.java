@@ -9,9 +9,8 @@ import ro.ubb.boardgameapp.repository.BoardGameRepository;
 import ro.ubb.boardgameapp.repository.BoardGameSessionRepository;
 import ro.ubb.boardgameapp.repository.UserRepository;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BoardGameSessionServiceImpl implements BoardGameSessionService {
@@ -56,5 +55,40 @@ public class BoardGameSessionServiceImpl implements BoardGameSessionService {
         Optional<User> userOptional = userRepository.findOptionalByUsername(username);
         User user = userOptional.get();
         return user.getWonSessions();
+    }
+
+    @Override
+    public Map<BoardGame, Long> getTop3PlayedGamesByUsername(String username) {
+        Set<BoardGameSession> sessions = getAllBoardGamesSessionsByUsername(username);
+
+        Map<BoardGame, Long> gameToPlayCount = sessions.stream()
+                .collect(Collectors.groupingBy(BoardGameSession::getBoardGame, Collectors.counting()));
+
+        Map<BoardGame, Long> sortedGameToPlayCount = gameToPlayCount.entrySet().stream()
+                .sorted(Map.Entry.<BoardGame, Long>comparingByValue().reversed())
+                .limit(3)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+
+        return sortedGameToPlayCount;
+    }
+
+    @Override
+    public Long countWonSessionsByUserId(UUID userId) {
+        return boardGameSessionRepository.countByWinnerId(userId);
+    }
+
+    @Override
+    public Long countPlayedSessionsByUserId(UUID userId) {
+        return boardGameSessionRepository.countByPlayersId(userId);
+    }
+
+    @Override
+    public Long countBoardGamesForUser(UUID userId) {
+        return userRepository.countByBoardGamesId(userId);
     }
 }

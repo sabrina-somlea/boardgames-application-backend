@@ -1,5 +1,6 @@
 package ro.ubb.boardgameapp.service;
 
+import ro.ubb.boardgameapp.model.BoardGame;
 import ro.ubb.boardgameapp.model.User;
 
 import java.util.List;
@@ -18,10 +19,12 @@ public interface UserService {
 
     User findByUsername(String username);
 
-User findUserById(UUID id);
-   User getUserLoggedInInfo();
+    User findUserById(UUID id);
+
+    User getUserLoggedInInfo();
 
     User updatePassword(UUID id, String initialPassword, String newPassword);
+
     List<User> searchUsers(String searchQuery);
 
     void sendFriendRequest(String username, UUID UserId);
@@ -29,6 +32,7 @@ User findUserById(UUID id);
     void acceptFriendRequest(String username, UUID UserFriendId);
 
     void declineFriendRequest(String username, UUID declinedUserId);
+
     void removeFriendRequest(UUID declinedUserId, String username);
 
     void deleteFriend(String username, UUID deletedFriendId);
@@ -38,4 +42,8 @@ User findUserById(UUID id);
     Set<User> getAllFriendRequestsSentByUsername(String username);
 
     Set<User> getAllFriendsByUsername(String username);
+
+    List<BoardGame> getTop3PlayedGamesByUser(UUID userId);
+
+    Long countFriendsForUser(UUID userId);
 }

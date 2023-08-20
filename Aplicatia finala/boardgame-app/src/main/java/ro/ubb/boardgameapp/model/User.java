@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 
 @Entity
-@Table(name="user")
+@Table(name = "user")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -32,9 +32,9 @@ public class User extends BaseEntity<UUID> implements UserDetails {
     @Column(unique = true)
     private String username;
     private String password;
-    @Lob
-    @Column(name = "profile_image", columnDefinition = "bytea")
-    private byte[] profileImage;
+//    @Lob
+//    @Column(name = "profile_image", columnDefinition = "bytea")
+//    private byte[] profileImage;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -55,41 +55,31 @@ public class User extends BaseEntity<UUID> implements UserDetails {
                             CascadeType.PERSIST,
                             CascadeType.MERGE
                     })
-    @JoinTable(name="table_friends",
-            joinColumns=@JoinColumn(name="user_id"),
-            inverseJoinColumns=@JoinColumn(name="friend_id")
+    @JoinTable(name = "table_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
-
     @JsonIgnore
     private Set<User> friends;
 
-//    @ManyToMany
-//    @JoinTable(name="table_friends",
-//            joinColumns=@JoinColumn(name="friend_id"),
-//            inverseJoinColumns=@JoinColumn(name="user_id")
-//    )
-//
-//    @JsonIgnore
-//    private Set<User> friendOf;
+    @ManyToMany(mappedBy = "friends")
+    @JsonIgnore
+    private Set<User> friendOf;
 
-    @ManyToMany (fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinTable(name="table_friends_requests",
-            joinColumns=@JoinColumn(name="user_id"),
-            inverseJoinColumns=@JoinColumn(name="friend_id")
+    @JoinTable(name = "table_friends_requests",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
 
     @JsonIgnore
     private Set<User> friendsRequests;
 
-    @ManyToMany
-    @JoinTable(name="table_friends_requests",
-            joinColumns=@JoinColumn(name="friend_id"),
-            inverseJoinColumns=@JoinColumn(name="user_id")
-    )
+    @ManyToMany(mappedBy = "friendsRequests")
     @JsonIgnore
     private Set<User> friendRequestOf;
 
@@ -129,7 +119,8 @@ public class User extends BaseEntity<UUID> implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-    public void removeBoardGame(BoardGame boardGame){
+
+    public void removeBoardGame(BoardGame boardGame) {
         this.boardGames.remove(boardGame);
         boardGame.getUsers().remove(this);
     }

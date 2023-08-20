@@ -25,4 +25,5 @@ public class BoardGameDto extends BaseDto {
     private int min_playtime;
     @NotNull(message = "Please enter the maximum play time")
     private int max_playtime;
+    private String image_url;
 }
