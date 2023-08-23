@@ -1,4 +1,4 @@
-package ro.ubb.boardgameapp.controller;
+package ro.ubb.boardgameapp.validators;
 
 import java.util.Date;
 import java.util.LinkedHashMap;

@@ -2,8 +2,8 @@ package ro.ubb.boardgameapp.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
-import ro.ubb.boardgameapp.controller.BirthDate;
-import ro.ubb.boardgameapp.controller.UniqueUsername;
+import ro.ubb.boardgameapp.validators.BirthDate;
+import ro.ubb.boardgameapp.validators.UniqueUsername;
 import ro.ubb.boardgameapp.model.Gender;
 
 import java.util.Date;

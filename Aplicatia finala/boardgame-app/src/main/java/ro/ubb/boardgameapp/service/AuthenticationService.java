@@ -5,10 +5,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ro.ubb.boardgameapp.controller.AuthenticationRequest;
-import ro.ubb.boardgameapp.controller.AuthenticationResponse;
-import ro.ubb.boardgameapp.controller.RegisterRequest;
-import ro.ubb.boardgameapp.model.User;
+import ro.ubb.boardgameapp.config.AuthenticationRequest;
+import ro.ubb.boardgameapp.config.AuthenticationResponse;
 import ro.ubb.boardgameapp.repository.UserRepository;
 
 @Service

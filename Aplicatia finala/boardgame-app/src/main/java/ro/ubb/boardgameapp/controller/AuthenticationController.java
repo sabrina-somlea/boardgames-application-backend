@@ -3,6 +3,8 @@ package ro.ubb.boardgameapp.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.ubb.boardgameapp.config.AuthenticationRequest;
+import ro.ubb.boardgameapp.config.AuthenticationResponse;
 import ro.ubb.boardgameapp.service.AuthenticationService;
 
 @RestController

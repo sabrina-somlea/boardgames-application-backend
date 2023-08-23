@@ -26,7 +26,7 @@ public class BoardGame extends BaseEntity<UUID> {
     @JsonProperty("name")
     private String name;
     @JsonProperty("description")
-    @Column(columnDefinition="varchar(5000)")
+    @Column(columnDefinition="text")
     private String description;
     @JsonProperty("year_published")
     private int yearPublished;

@@ -1,4 +1,4 @@
-package ro.ubb.boardgameapp.controller;
+package ro.ubb.boardgameapp.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

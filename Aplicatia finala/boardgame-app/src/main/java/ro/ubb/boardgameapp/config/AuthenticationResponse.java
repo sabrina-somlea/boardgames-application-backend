@@ -1,4 +1,4 @@
-package ro.ubb.boardgameapp.controller;
+package ro.ubb.boardgameapp.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

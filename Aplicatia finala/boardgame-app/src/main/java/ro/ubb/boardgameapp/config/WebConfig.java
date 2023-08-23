@@ -54,7 +54,7 @@ public class WebConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://192.168.0.10:4200/"));
         configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "Access-Control-Allow-Origin"));
         configuration.setAllowCredentials(true);
