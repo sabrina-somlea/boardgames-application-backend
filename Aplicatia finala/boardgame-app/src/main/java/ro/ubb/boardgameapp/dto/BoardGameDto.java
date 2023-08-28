@@ -11,9 +11,9 @@ import lombok.*;
 @Builder
 @ToString(callSuper = true)
 public class BoardGameDto extends BaseDto {
-    @NotBlank(message = "Please enter a valid name")
+    @NotNull(message = "Please enter a valid name")
     private String name;
-    @NotBlank(message = "Please enter a description")
+    @NotNull(message = "Please enter a description")
     private String description;
     @NotNull(message = "Please enter a year")
     private int year_published;
