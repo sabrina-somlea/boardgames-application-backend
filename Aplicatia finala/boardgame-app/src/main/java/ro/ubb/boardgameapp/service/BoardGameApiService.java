@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class BoardGameApiService {
-    private String API_URL = "https://api.boardgameatlas.com/api/search?name=%s&client_id=%s";
+    private String API_URLOld = "https://api.boardgameatlas.com/api/search?name=%s&client_id=%s";
+    private String API_URL = "https://temp-bga-api-c4bd0c7481bf.herokuapp.com/api/search?name=%s&client_id=%s";
     private static final String client_key = "lkdjLvFi2P";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
